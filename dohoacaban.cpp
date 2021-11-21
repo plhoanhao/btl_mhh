@@ -383,11 +383,11 @@ public:
         {
             gotoXY(45, i);
             cout << char(179);
-        }    
+        }
         gotoXY(68, 17);
         cout << '>';
     }
-    
+
     void PrintCornerR()
     {
         gotoXY(105, 17);
@@ -401,8 +401,8 @@ public:
         {
             gotoXY(105, i);
             cout << char(179);
-        }    
-        gotoXY(105,13);
+        }
+        gotoXY(105, 13);
         cout << '^';
     }
     // ham chinhh
@@ -428,7 +428,7 @@ public:
         bool edge[4];
         for (int i = 0; i < 4; i++)
             edge[i] = false;
-        for (int i = 0; i < trans.size(); i++)
+        for (int i = 0; i < trans.size() - 1; i++)
         {
             while (place[i].token > 0)
             {
@@ -504,7 +504,7 @@ public:
         int freeT = 0;
         int busyT = 0;
         int docuT = 0;
-        Reset:
+    Reset:
         cout << "wait = ", cin >> waitT, cout << endl;
         cout << "free = ", cin >> freeT, cout << endl;
         cout << "inside = ", cin >> insideT, cout << endl;
@@ -527,15 +527,15 @@ public:
         trans[0] = Transition("  Start", 40, 10);
         trans[1] = Transition(" Change", 100, 10);
         trans[2] = Transition("  End", 70, 4);
-        trans[0].input = vector<int> {0,5};
-        trans[0].output = vector<int> {1,2};
-        trans[0].e = vector<int> {0,9,1,2};
-        trans[1].input = vector<int> {1,2};
-        trans[1].output = vector<int> {3,4};
-        trans[1].e = vector<int> {3,4,5,6};
-        trans[2].input = vector<int> {4, 6};
-        trans[2].output = vector<int> {5, 6};
-        trans[2].e = vector<int> {7,8};
+        trans[0].input = vector<int>{0, 5};
+        trans[0].output = vector<int>{1, 2};
+        trans[0].e = vector<int>{0, 9, 1, 2};
+        trans[1].input = vector<int>{1, 2};
+        trans[1].output = vector<int>{3, 4};
+        trans[1].e = vector<int>{3, 4, 5, 6};
+        trans[2].input = vector<int>{4, 6};
+        trans[2].output = vector<int>{5, 6};
+        trans[2].e = vector<int>{7, 8};
         bool edge[10];
         for (int i = 0; i < 10; i++)
             edge[i] = false;
@@ -569,9 +569,10 @@ public:
                 }
                 PrintModel3(edge);
             }
-            if (check == false) break;
+            if (check == false)
+                break;
         }
-        Exit:
+    Exit:
         gotoXY(0, 24);
         cout << "Press R to reset. Press E to exit";
         while (1)
@@ -582,7 +583,7 @@ public:
                 clrscr();
                 goto Reset;
             }
-            else 
+            else
             {
                 break;
             }
@@ -591,7 +592,58 @@ public:
 
     void Exercise4()
     {
+        int waitT = 0;
+        int insideT = 0;
+        int doneT = 0;
+        int freeT = 0;
+        int busyT = 0;
+        int docuT = 0;
+        cout << "wait = ", cin >> waitT, cout << endl;
+        cout << "free = ", cin >> freeT, cout << endl;
+        cout << "inside = ", cin >> insideT, cout << endl;
+        cout << "busy = ", cin >> busyT, cout << endl;
+        cout << "done = ", cin >> doneT, cout << endl;
+        cout << "docu = ", cin >> docuT, cout << endl;
+        // khoi tao place
+        place.resize(7);
+        place[0] = Place("Wait", waitT, 10, 11);
+        place[1] = Place("Inside", insideT, 70, 17);
+        place[3] = Place("Done", doneT, 130, 11);
 
+        place[5] = Place(" Free", freeT, 40, 5);
+        place[2] = Place(" Busy", busyT, 70, 11);
+        place[4] = Place(" Docu", docuT, 100, 5);
+
+        place[6] = Place(" Temp", 100, 0, 0);
+        // khoi tao trans
+        trans.resize(3);
+        trans[0] = Transition("  Start", 40, 10);
+        trans[1] = Transition(" Change", 100, 10);
+        trans[2] = Transition("  End", 70, 4);
+        trans[0].input = vector<int>{0, 5};
+        trans[0].output = vector<int>{1, 2};
+        trans[1].input = vector<int>{1, 2};
+        trans[1].output = vector<int>{3, 4};
+        trans[2].input = vector<int>{4, 6};
+        trans[2].output = vector<int>{5, 6};
+
+        for (int i = 0; i < 3; i++)
+        {
+            if (place[trans[i].input[0]].token > 0 && place[trans[i].input[1]].token > 0)
+            {
+                place[trans[i].input[0]].token--;
+                place[trans[i].input[1]].token--;
+                place[trans[i].output[0]].token++;
+                place[trans[i].output[1]].token++;
+                cout << trans[i].name << ":"<< endl;
+                cout << "Wait: " << (place[0]).token << ", Inside: " << (place[1]).token << ", Done: " << (place[3]).token << endl;
+                cout << "Free: " << (place[5]).token << ", Busy: " << (place[2]).token << ", Docu: " << (place[4]).token << endl;
+                place[trans[i].input[0]].token++;
+                place[trans[i].input[1]].token++;
+                place[trans[i].output[0]].token--;
+                place[trans[i].output[1]].token--;
+            }
+        }
     }
 };
 
@@ -600,9 +652,10 @@ int main()
     resizeConsole(1600, 900);
     int t = 0;
     PetriNet petri;
-    cout << "Nhap bai can giai: ";
     do
     {
+        clrscr();
+        cout << "Nhap bai can giai: ";
         cin >> t;
         if (t == 1)
         {
